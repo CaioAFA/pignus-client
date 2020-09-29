@@ -20,14 +20,31 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     // Save URL
     prefs.setString('serverUrl', widget._serverUrlController.text);
-    print(widget._serverUrlController.text);
   }
 
   void _getSavedServerUrl() async {
     final prefs = await SharedPreferences.getInstance();
 
     widget._serverUrlController.text = prefs.getString('serverUrl') ?? '';
-    print('Passou');
+  }
+
+  Future<String> _sendImage() async {
+    var request = http.MultipartRequest('POST', Uri.parse(widget._serverUrlController.text));
+    request.files.add(
+        await http.MultipartFile.fromPath(
+        'picture',
+        widget.imagePath
+      )
+    );
+    try{
+      var res = await request.send();
+      print(res);
+      return 'Foto enviada com sucesso!';
+    }
+    catch(error){
+      print(error.toString());
+      return 'Erro: ' + error.toString();
+    }
   }
 
   void _showSendImageDialog(imagePath) {
@@ -38,11 +55,33 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Enviando Foto..." + imagePath),
-          content: Container(
-            height: 80.0,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
+          content: FutureBuilder<String>(
+            future: _sendImage(),
+            builder: (context, snapshot){
+              switch(snapshot.connectionState){
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                  return Container(
+                    height: 80.0,
+                    child: Center(
+                      child: Text(
+                        "Enviando foto...",
+                        style: TextStyle(color: Colors.amber, fontSize: 25),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  );
+                default:
+                  return Container(
+                    height: 80.0,
+                    child: Center(
+                        child: Text(snapshot.data ?? '',
+                            style: TextStyle(color: Colors.green,)
+                        )
+                    ),
+                  );
+              }
+            }
           ),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
