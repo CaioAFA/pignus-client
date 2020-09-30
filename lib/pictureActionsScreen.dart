@@ -32,14 +32,18 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     var request = http.MultipartRequest('POST', Uri.parse(widget._serverUrlController.text));
     request.files.add(
         await http.MultipartFile.fromPath(
-        'picture',
+        'photo',
         widget.imagePath
       )
     );
     try{
       var res = await request.send();
-      print(res);
-      return 'Foto enviada com sucesso!';
+      if(res.statusCode == 200){
+        return 'Foto enviada com sucesso! Chance: ${await res.stream.bytesToString()}';
+      }
+      else{
+        return 'Erro ao enviar foto. Status ${res.statusCode}';
+      }
     }
     catch(error){
       print(error.toString());
@@ -54,7 +58,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Enviando Foto..." + imagePath),
+          title: new Text("Enviando Foto..."),
           content: FutureBuilder<String>(
             future: _sendImage(),
             builder: (context, snapshot){
@@ -64,11 +68,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   return Container(
                     height: 80.0,
                     child: Center(
-                      child: Text(
-                        "Enviando foto...",
-                        style: TextStyle(color: Colors.amber, fontSize: 25),
-                        textAlign: TextAlign.center,
-                      ),
+                      child: CircularProgressIndicator(),
                     )
                   );
                 default:
