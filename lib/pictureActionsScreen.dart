@@ -39,7 +39,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
     try{
       var res = await request.send();
       if(res.statusCode == 200){
-        return 'Foto enviada com sucesso! Chance: ${await res.stream.bytesToString()}';
+        return 'Foto enviada com sucesso! ${await res.stream.bytesToString()}';
       }
       else{
         return 'Erro ao enviar foto. Status ${res.statusCode}';
@@ -86,7 +86,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text("Fechar"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
