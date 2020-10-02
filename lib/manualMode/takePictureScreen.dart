@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:camera/camera.dart';
-import 'package:tcccamera/pictureActionsScreen.dart';
+import 'package:tcccamera/manualMode/pictureActionsScreen.dart';
 
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
