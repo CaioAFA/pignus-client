@@ -70,7 +70,7 @@
                 height: 50.0,
                 child: SizedBox.expand(
                   child: RaisedButton(
-                    child: Text('Modo Automático (TODO)'),
+                    child: Text('Modo Automático'),
                     color: Colors.red,
                     onPressed: (){
                       Navigator.push(
